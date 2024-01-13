@@ -1,7 +1,7 @@
 import css from './Filter.module.css';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setFilter } from '../../redux/postDetailReducer';
+import { setFilter } from '../../redux/tasksSlice';
 
 const Filter = () => {
   const dispatch = useDispatch();

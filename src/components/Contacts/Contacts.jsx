@@ -5,7 +5,7 @@ const Contacts = ({ contacts, deleteContacts }) => {
     <>
       <div className={css.general}>
         <li className={css.list}>
-          {contacts.name}: {contacts.number}
+          {contacts.name}: {contacts.phone}
         </li>
 
         <br />

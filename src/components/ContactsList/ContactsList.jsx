@@ -1,25 +1,40 @@
 import Contacts from '../Contacts/Contacts';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setContactsRemove } from '../../redux/postDetailReducer';
+import { getTasks } from '../../redux/selectors';
+import { fetchContacts, deleteContact } from '../../redux/operations';
+
 const ContactsList = () => {
-  const contacts = useSelector(state => state.postDetails.contacts);
-  const filter = useSelector(state => state.postDetails.filter);
+  const { items, isLoading, error, filter } = useSelector(getTasks);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   const deleteContacts = id => {
-    dispatch(setContactsRemove(id));
+    dispatch(deleteContact(id));
   };
+
   return (
     <>
-      {contacts
-        ?.filter(
-          contact =>
-            filter === '' ||
-            contact.name.toLowerCase().includes(filter.toLowerCase().trim())
-        )
-        .map(el => (
-          <Contacts contacts={el} key={el.id} deleteContacts={deleteContacts} />
-        ))}
+      {isLoading && <b>Loading tasks...</b>}
+      {error && <b>{error}</b>}
+      {Array.isArray(items) &&
+        items
+          .filter(
+            item =>
+              filter === '' ||
+              item.name.toLowerCase().includes(filter?.toLowerCase().trim())
+          )
+
+          .map((el, index) => (
+            <Contacts
+              contacts={el}
+              key={index}
+              deleteContacts={deleteContacts}
+            />
+          ))}
     </>
   );
 };

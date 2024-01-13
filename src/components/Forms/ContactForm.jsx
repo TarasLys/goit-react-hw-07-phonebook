@@ -2,13 +2,15 @@ import { useState } from 'react';
 import css from './ContactForm.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
-import { setContacts } from '../../redux/postDetailReducer';
+import { addContact } from '../../redux/operations';
+import { getTasks } from '../../redux/selectors';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
-  const contacts = useSelector(state => state.postDetails.contacts);
+  const { items } = useSelector(getTasks);
+
   const dispatch = useDispatch();
 
   const handleSubmit = e => {
@@ -17,18 +19,18 @@ export const ContactForm = () => {
     const newContacts = {
       id: nanoid(),
       name,
-      number,
+      phone,
     };
     console.log(newContacts);
-    contacts.some(el => el.name === newContacts.name)
+    items.find(el => el.name === newContacts.name)
       ? alert(`${newContacts.name} is already in contact.`)
-      : dispatch(setContacts(newContacts));
+      : dispatch(addContact(newContacts));
 
     NewContact();
   };
   const NewContact = () => {
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   const handleChange = e => {
@@ -36,8 +38,8 @@ export const ContactForm = () => {
       case 'name':
         setName(e.currentTarget.value);
         break;
-      case 'number':
-        setNumber(e.currentTarget.value);
+      case 'phone':
+        setPhone(e.currentTarget.value);
         break;
       default:
         return;
@@ -57,12 +59,12 @@ export const ContactForm = () => {
           placeholder="Введи ім'я для пошуку"
           required
         />
-        <label htmlFor="">Number</label>
+        <label htmlFor="">Phone</label>
         <input
           className={css.allInput}
           type="tel"
-          name="number"
-          value={number}
+          name="phone"
+          value={phone}
           onChange={handleChange}
           placeholder="Введи номер телефону"
           required
